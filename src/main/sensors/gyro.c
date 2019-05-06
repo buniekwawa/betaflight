@@ -208,8 +208,8 @@ void pgResetFn_gyroConfig(gyroConfig_t *gyroConfig)
                                         // overridden and the static lowpass 1 is disabled. We can't set this
                                         // value to 0 otherwise Configurator versions 10.4 and earlier will also
                                         // reset the lowpass filter type to PT1 overriding the desired BIQUAD setting.
-    gyroConfig->gyro_lowpass2_type = FILTER_BIQUAD;
-    gyroConfig->gyro_lowpass2_hz = 0;
+    gyroConfig->gyro_lowpass2_type = FILTER_PT1;
+    gyroConfig->gyro_lowpass2_hz = 150;
     gyroConfig->gyro_high_fsr = false;
     gyroConfig->gyro_to_use = GYRO_CONFIG_USE_GYRO_DEFAULT;
     gyroConfig->gyro_soft_notch_hz_1 = 0;
@@ -1275,10 +1275,10 @@ void dynLpfGyroUpdate(float throttle)
             const float gyroDt = gyro.targetLooptime * 1e-6f;
             for (int axis = 0; axis < XYZ_AXIS_COUNT; axis++) {
 #ifdef USE_MULTI_GYRO
-                if (gyroConfig()->gyro_to_use == GYRO_CONFIG_USE_GYRO_1 || gyroConfig()->gyro_to_use == GYRO_CONFIG_USE_GYRO_BOTH) {
+                if (gyroToUse == GYRO_CONFIG_USE_GYRO_1 || gyroToUse == GYRO_CONFIG_USE_GYRO_BOTH) {
                     pt1FilterUpdateCutoff(&gyroSensor1.lowpassFilter[axis].pt1FilterState, pt1FilterGain(cutoffFreq, gyroDt));
                 }
-                if (gyroConfig()->gyro_to_use == GYRO_CONFIG_USE_GYRO_2 || gyroConfig()->gyro_to_use == GYRO_CONFIG_USE_GYRO_BOTH) {
+                if (gyroToUse == GYRO_CONFIG_USE_GYRO_2 || gyroToUse == GYRO_CONFIG_USE_GYRO_BOTH) {
                     pt1FilterUpdateCutoff(&gyroSensor2.lowpassFilter[axis].pt1FilterState, pt1FilterGain(cutoffFreq, gyroDt));
                 }
 #else
@@ -1289,10 +1289,10 @@ void dynLpfGyroUpdate(float throttle)
             DEBUG_SET(DEBUG_DYN_LPF, 2, cutoffFreq);
             for (int axis = 0; axis < XYZ_AXIS_COUNT; axis++) {
 #ifdef USE_MULTI_GYRO
-                if (gyroConfig()->gyro_to_use == GYRO_CONFIG_USE_GYRO_1 || gyroConfig()->gyro_to_use == GYRO_CONFIG_USE_GYRO_BOTH) {
+                if (gyroToUse == GYRO_CONFIG_USE_GYRO_1 || gyroToUse == GYRO_CONFIG_USE_GYRO_BOTH) {
                     biquadFilterUpdateLPF(&gyroSensor1.lowpassFilter[axis].biquadFilterState, cutoffFreq, gyro.targetLooptime);
                 }
-                if (gyroConfig()->gyro_to_use == GYRO_CONFIG_USE_GYRO_2 || gyroConfig()->gyro_to_use == GYRO_CONFIG_USE_GYRO_BOTH) {     
+                if (gyroToUse == GYRO_CONFIG_USE_GYRO_2 || gyroToUse == GYRO_CONFIG_USE_GYRO_BOTH) {     
                     biquadFilterUpdateLPF(&gyroSensor2.lowpassFilter[axis].biquadFilterState, cutoffFreq, gyro.targetLooptime);
                 }
 #else
