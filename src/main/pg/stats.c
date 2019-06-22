@@ -18,17 +18,22 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "platform.h"
 
-#include "common/time.h"
+#ifdef USE_PERSISTENT_STATS
 
-typedef struct positionConfig_s {
-    uint8_t altSource;
-} positionConfig_t;
+#include "pg/pg.h"
+#include "pg/pg_ids.h"
 
-PG_DECLARE(positionConfig_t, positionConfig);
+#include "stats.h"
 
-bool isAltitudeOffset(void);
-void calculateEstimatedAltitude(timeUs_t currentTimeUs);
-int32_t getEstimatedAltitudeCm(void);
-int16_t getEstimatedVario(void);
+PG_REGISTER_WITH_RESET_TEMPLATE(statsConfig_t, statsConfig, PG_STATS_CONFIG, 1);
+
+PG_RESET_TEMPLATE(statsConfig_t, statsConfig,
+    .stats_enabled = 0,
+    .stats_total_flights = 0,
+    .stats_total_time_s = 0,
+    .stats_total_dist_m = 0,
+);
+
+#endif

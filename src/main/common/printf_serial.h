@@ -18,17 +18,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
 
-#include "common/time.h"
+struct serialPort_s;
 
-typedef struct positionConfig_s {
-    uint8_t altSource;
-} positionConfig_t;
+void printfSerialInit(void);
+void setPrintfSerialPort(struct serialPort_s *serialPort);
 
-PG_DECLARE(positionConfig_t, positionConfig);
-
-bool isAltitudeOffset(void);
-void calculateEstimatedAltitude(timeUs_t currentTimeUs);
-int32_t getEstimatedAltitudeCm(void);
-int16_t getEstimatedVario(void);
+int tfp_printf(const char *fmt, ...);

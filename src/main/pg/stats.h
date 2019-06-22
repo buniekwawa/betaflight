@@ -20,15 +20,14 @@
 
 #pragma once
 
-#include "common/time.h"
+#include "pg/pg.h"
+#include "drivers/io_types.h"
 
-typedef struct positionConfig_s {
-    uint8_t altSource;
-} positionConfig_t;
+typedef struct statsConfig_s {
+    uint32_t stats_total_flights;
+    uint32_t stats_total_time_s; // [s]
+    uint32_t stats_total_dist_m; // [m]
+    uint8_t  stats_enabled;
+} statsConfig_t;
 
-PG_DECLARE(positionConfig_t, positionConfig);
-
-bool isAltitudeOffset(void);
-void calculateEstimatedAltitude(timeUs_t currentTimeUs);
-int32_t getEstimatedAltitudeCm(void);
-int16_t getEstimatedVario(void);
+PG_DECLARE(statsConfig_t, statsConfig);
